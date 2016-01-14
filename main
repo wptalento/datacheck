@@ -8,6 +8,7 @@ Sheets("Sheet1").Select
 ValuationDate = Range("c1").Value
 
 Dim wsFunc As WorksheetFunction: Set wsFunc = Application.WorksheetFunction
+Range("g1") = wsFunc.Max(Columns("a"))
 
 i = 5
 
