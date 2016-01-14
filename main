@@ -1,0 +1,82 @@
+Sub Macro1()
+'
+' Data Checker
+' Copyright 2016 Wilson P Talento (wptalento@gmail.com)
+'
+
+Sheets("Sheet1").Select
+ValuationDate = Range("c1").Value
+
+Dim wsFunc As WorksheetFunction: Set wsFunc = Application.WorksheetFunction
+
+i = 5
+
+For Each counter In Range("EE")
+
+    On Error Resume Next
+    If wsFunc.VLookup(counter, Range("Table"), 2, False) = Cells(i, 3).Value And _
+        wsFunc.VLookup(counter, Range("Table"), 3, False) = Cells(i, 4).Value And _
+        wsFunc.VLookup(counter, Range("Table"), 6, False) = Cells(i, 7).Value And _
+        wsFunc.VLookup(counter, Range("Table"), 7, False) = Cells(i, 8).Value _
+    Then
+        If counter <> 0 Then
+        Cells(i, 10).Value = (ValuationDate - Cells(i, 3).Value) / 365.25
+        Cells(i, 11).Value = (Cells(i, 4).Value - Cells(i, 3).Value) / 365.25
+        Cells(i, 12).Value = (ValuationDate - Cells(i, 4).Value) / 365.25
+        Cells(i, 15).Value = Cells(i, 5) / Cells(i, 6)
+    
+        Cells(i, 13).Value = wsFunc.VLookup(counter, Range("Table"), 4, False)
+            If Cells(i, 13).Value <> 0 Then
+                Cells(i, 14).Value = (Cells(i, 5).Value - Cells(i, 13).Value) / Cells(i, 5).Value
+            Else
+                Cells(i, 2).Font.Color = vbBlue
+            End If
+        End If
+        
+    Else
+        Cells(i, 2).Font.Color = vbRed
+        If wsFunc.VLookup(counter, Range("Table"), 2, False) <> Cells(i, 3).Value Then
+            Cells(i, 3).Font.Color = vbMagenta
+        End If
+        If wsFunc.VLookup(counter, Range("Table"), 3, False) <> Cells(i, 4).Value Then
+            Cells(i, 4).Font.Color = vbMagenta
+        End If
+        If wsFunc.VLookup(counter, Range("Table"), 6, False) <> Cells(i, 7).Value Then
+            Cells(i, 7).Font.Color = vbMagenta
+        End If
+        If wsFunc.VLookup(counter, Range("Table"), 7, False) <> Cells(i, 8).Value Then
+            Cells(i, 8).Font.Color = vbMagenta
+        End If
+        
+    End If
+    i = i + 1
+    On Error GoTo 0
+    
+Next
+
+Range("j1").Value = wsFunc.Min(Range(Cells(5, 10), Cells(i, 10)))
+Range("j2").Value = wsFunc.Max(Range(Cells(5, 10), Cells(i, 10)))
+Range("j3").Value = wsFunc.Average(Range(Cells(5, 10), Cells(i, 10)))
+Range("k1").Value = wsFunc.Min(Range(Cells(5, 11), Cells(i, 11)))
+Range("k2").Value = wsFunc.Max(Range(Cells(5, 11), Cells(i, 11)))
+Range("k3").Value = wsFunc.Average(Range(Cells(5, 11), Cells(i, 11)))
+Range("l1").Value = wsFunc.Min(Range(Cells(5, 12), Cells(i, 12)))
+Range("l2").Value = wsFunc.Max(Range(Cells(5, 12), Cells(i, 12)))
+Range("l3").Value = wsFunc.Average(Range(Cells(5, 12), Cells(i, 12)))
+Range("m1").Value = wsFunc.Min(Range(Cells(5, 13), Cells(i, 13)))
+Range("m2").Value = wsFunc.Max(Range(Cells(5, 13), Cells(i, 13)))
+Range("m3").Value = wsFunc.Average(Range(Cells(5, 13), Cells(i, 13)))
+Range("n1").Value = wsFunc.Min(Range(Cells(5, 14), Cells(i, 14)))
+Range("n2").Value = wsFunc.Max(Range(Cells(5, 14), Cells(i, 14)))
+Range("n3").Value = wsFunc.Average(Range(Cells(5, 14), Cells(i, 14)))
+    
+End Sub
+
+Sub Clear()
+    
+    Range(Range("a1"), Range("a1").SpecialCells(xlLastCell)).Font.Color = vbBlack
+    Range("j1:n3").Clear
+    Range("g1").Clear
+    Range(Range("a5"), Range("a5").SpecialCells(xlLastCell)).Delete
+    
+End Sub
